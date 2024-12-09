@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>1RM 測試重量計算</title>
+        <style>
+            body {
+                font-family: sans-serif;
+            }
+            table {
+                border-collapse: collapse;
+                width: 550px;
+                margin-top: 20px;
+            }
+            th,
+            td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>1RM 測試重量計算</h1>
+        <label for="estimated1RM">預估 1RM (公斤):</label>
+        <input type="number" id="estimated1RM" value="180" />
+        <button onclick="calculateWeights()">計算</button>
+        <table id="resultsTable">
+            <thead>
+                <tr>
+                    <th>組別</th>
+                    <th>比例</th>
+                    <th>重量 (公斤)</th>
+                    <th>次數</th>
+                    <th>組間休息 (分鐘)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <script>
+            function calculateWeights() {
+                const estimated1RM = parseFloat(
+                    document.getElementById("estimated1RM").value
+                );
+
+                const weights = [
+                    {
+                        group: "第一組 (熱身)",
+                        percentage: 0.5,
+                        reps: 10,
+                        rest: 1,
+                    },
+                    { group: "第二組", percentage: 0.75, reps: 3, rest: 1 },
+                    { group: "第三組", percentage: 0.85, reps: 1, rest: 1 },
+                    { group: "第四組", percentage: 0.95, reps: 1, rest: 2 },
+                    {
+                        group: "第五組 (感覺一般)",
+                        percentage: 0.975,
+                        reps: 1,
+                        rest: 5,
+                    },
+                    {
+                        group: "第五組 (感覺良好)",
+                        percentage: 1.0,
+                        reps: 1,
+                        rest: 5,
+                    },
+                ];
+
+                const tableBody = document
+                    .getElementById("resultsTable")
+                    .getElementsByTagName("tbody")[0];
+                tableBody.innerHTML = ""; // 清空表格
+
+                for (const weight of weights) {
+                    const row = tableBody.insertRow();
+                    const groupCell = row.insertCell();
+                    const percentageCell = row.insertCell();
+                    const weightCell = row.insertCell();
+                    const repsCell = row.insertCell();
+                    const restCell = row.insertCell();
+
+                    groupCell.textContent = weight.group;
+                    percentageCell.textContent = weight.percentage
+                        ? (weight.percentage * 100).toFixed(1) + "%"
+                        : ""; // 顯示百分比
+                    weightCell.textContent = weight.percentage
+                        ? (estimated1RM * weight.percentage).toFixed(1)
+                        : "";
+                    repsCell.textContent = weight.reps;
+                    restCell.textContent = weight.rest;
+
+                    // 根據組別名稱調整背景顏色以示區別
+                    if (weight.group.includes("感覺良好")) {
+                        row.style.backgroundColor = "#e0f0e0"; // 淺綠色
+                    } else if (weight.group.includes("感覺一般")) {
+                        row.style.backgroundColor = "#f0f0e0"; // 淺灰色
+                    }
+                }
+            }
+
+            // 網頁載入時先執行一次計算
+            calculateWeights();
+        </script>
+    </body>
+</html>
